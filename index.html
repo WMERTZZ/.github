@@ -1,41 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WMERTZ - Breaking News</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WMERTZ - Breaking News</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
 </head>
 <body>
-  <header>
-    <div class="top-bar">
-      <div class="logo">WMERTZ</div>
-      <nav>
-        <ul id="categories"></ul>
-      </nav>
-    </div>
-  </header>
-  
-  <main>
-    <section id="featured-news">
-      <h2>Featured News</h2>
-      <div id="featured-list" class="news-grid"></div>
-    </section>
+    <header>
+        <div class="top-bar">
+            <div class="logo">WMERTZ</div>
+            <nav>
+                <ul id="categories"></ul>
+            </nav>
+        </div>
+    </header>
     
-    <section id="news-container">
-      <h2>Latest News</h2>
-      <div id="news-list" class="news-grid"></div>
-    </section>
+    <main>
+        <section id="featured-news">
+            <h2>Featured News</h2>
+            <div id="featured-list" class="news-grid"></div>
+        </section>
+        
+        <section id="news-container">
+            <h2>Latest News</h2>
+            <div id="news-list" class="news-grid"></div>
+        </section>
+        
+        <aside id="hot-gallery">
+            <h3>Hot Gallery</h3>
+            <div id="hot-gallery-list" class="hot-gallery-grid"></div>
+        </aside>
+    </main>
     
-    <aside id="hot-gallery">
-      <h3>Hot Gallery</h3>
-      <div id="hot-gallery-list" class="hot-gallery-grid"></div>
-    </aside>
-  </main>
-  
-  <footer>
-    <p>&copy; 2025 WMERTZ. All rights reserved.</p>
-  </footer>
+    <footer>
+        <p>&copy; 2025 WMERTZ. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        async function fetchRSS() {
+            const response = await fetch('rss-parser.php');
+            const data = await response.json();
+            
+            let newsList = document.getElementById('news-list');
+            newsList.innerHTML = '';
+            
+            data.forEach(post => {
+                let postElement = document.createElement('div');
+                postElement.classList.add('news-item');
+                postElement.innerHTML = `
+                    <a href="/${post.slug}">
+                        <img src="${post.image}" alt="${post.title}" />
+                        <h3>${post.title}</h3>
+                        <p>${post.description}</p>
+                        <span>${post.date}</span>
+                    </a>
+                `;
+                newsList.appendChild(postElement);
+            });
+        }
+        
+        fetchRSS();
+    </script>
 </body>
 </html>
